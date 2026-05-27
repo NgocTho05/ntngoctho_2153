@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực hành An toàn thông tin nâng cao</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container mt-4">
+            <img src="https://file1.hutech.edu.vn/file/editor/homepage/stories/hinh34/logo%20CMYK-01.png" alt="hutech" class="logo-img">
+        </div>
+        
+        <div class="menu-card">
+            <h3 class="menu-title">BÀI THỰC HÀNH BẢO MẬT THÔNG TIN NÂNG CAO</h3>
+            
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="/caesar" class="menu-link">
+                        <span><i class="fas fa-key mr-2"></i> Caesar Cipher</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/vigenere" class="menu-link">
+                        <span><i class="fas fa-align-left mr-2"></i> Vigenere Cipher</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/railfence" class="menu-link">
+                        <span><i class="fas fa-bars mr-2"></i> Rail Fence Cipher</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/playfair" class="menu-link">
+                        <span><i class="fas fa-th mr-2"></i> Playfair Cipher</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/transposition" class="menu-link">
+                        <span><i class="fas fa-exchange-alt mr-2"></i> Transposition Cipher</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
