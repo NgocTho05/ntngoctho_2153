@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUTECH Secure Chat (DH-AES)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <div id="login-container" class="glass-panel">
+        <h1>Secure Chat</h1>
+        <p>Mã hóa Diffie-Hellman & AES-CBC</p>
+        <input type="text" id="username-input" placeholder="Nhập tên của bạn" autocomplete="off">
+        <button id="join-btn">Tham gia phòng chat</button>
+    </div>
+
+    <div id="chat-container" class="glass-panel" style="display: none;">
+        <div class="chat-header">
+            <h2>Phòng Chat Bảo Mật</h2>
+            <div id="status-dot" class="status-dot connecting"></div>
+        </div>
+        
+        <div id="messages-area" class="messages-area">
+            <div class="system-message">Đang chờ kết nối...</div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Nhập tin nhắn mã hóa AES..." autocomplete="off">
+            <button id="send-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const loginContainer = document.getElementById('login-container');
+        const chatContainer = document.getElementById('chat-container');
+        const usernameInput = document.getElementById('username-input');
+        const joinBtn = document.getElementById('join-btn');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const messagesArea = document.getElementById('messages-area');
+        const statusDot = document.getElementById('status-dot');
+
+        let isConnected = false;
+
+        joinBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (username) {
+                loginContainer.style.display = 'none';
+                chatContainer.style.display = 'flex';
+                messagesArea.innerHTML = ''; // Clear waiting message
+                socket.emit('join', { username: username });
+            }
+        });
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') joinBtn.click();
+        });
+
+        socket.on('status', (data) => {
+            const div = document.createElement('div');
+            div.className = 'system-message';
+            div.textContent = data.msg;
+            messagesArea.appendChild(div);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+
+            if (data.msg.includes('thành công')) {
+                statusDot.className = 'status-dot connected';
+                isConnected = true;
+            } else if (data.msg.includes('Lỗi')) {
+                statusDot.className = 'status-dot error';
+            }
+        });
+
+        socket.on('receive_message', (data) => {
+            const div = document.createElement('div');
+            // If the message is an echo from ourselves (set in backend)
+            const isMe = data.is_me || false;
+            let msgText = data.message;
+            let sender = "";
+
+            if (!isMe && msgText.includes(': ')) {
+                const parts = msgText.split(': ');
+                sender = parts.shift();
+                msgText = parts.join(': ');
+            } else if (isMe && msgText.includes(': ')) {
+                const parts = msgText.split(': ');
+                parts.shift(); // remove username
+                msgText = parts.join(': ');
+            }
+
+            div.className = isMe ? 'message-bubble me' : 'message-bubble others';
+            
+            if (sender && !isMe) {
+                const senderDiv = document.createElement('div');
+                senderDiv.className = 'sender-name';
+                senderDiv.textContent = sender;
+                div.appendChild(senderDiv);
+            }
+
+            const textDiv = document.createElement('div');
+            textDiv.textContent = msgText;
+            div.appendChild(textDiv);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = isMe ? 'message-wrapper me' : 'message-wrapper others';
+            wrapper.appendChild(div);
+
+            messagesArea.appendChild(wrapper);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        });
+
+        function sendMessage() {
+            if (!isConnected) return;
+            const text = messageInput.value.trim();
+            if (text) {
+                socket.emit('send_message', { message: text });
+                messageInput.value = '';
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+    </script>
+</body>
+</html>
