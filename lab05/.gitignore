@@ -1,0 +1,9 @@
+*.pyc
+__pycache__/
+*.dll
+platforms
+*.pem
+keys/ 
+*.bat
+*.cert
+*.key

@@ -19,7 +19,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 clients = {}
 
 SERVER_HOST = 'localhost'
-SERVER_PORT = 12345
+SERVER_PORT = 55555
 
 def encrypt_message(aes_key, message):
     cipher = AES.new(aes_key, AES.MODE_CBC)
@@ -166,5 +166,5 @@ if __name__ == '__main__':
     # Ensure templates folder exists
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static', exist_ok=True)
-    print("[*] Starting Web Client on http://localhost:5000")
-    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
+    print("[*] Starting Web Client on http://localhost:5050")
+    socketio.run(app, host='0.0.0.0', port=5050, allow_unsafe_werkzeug=True)
