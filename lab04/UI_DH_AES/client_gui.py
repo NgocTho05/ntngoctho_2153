@@ -14,7 +14,7 @@ ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
 class P2P_DH_ChatClient:
-    def __init__(self, port=12345):
+    def __init__(self, port=55555):
         self.port = port
         self.aes_key = None
         self.sock = None

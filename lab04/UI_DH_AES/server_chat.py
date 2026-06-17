@@ -9,7 +9,7 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 
 HOST = 'localhost'
-PORT = 12345
+PORT = 55555
 
 clients = [] # List to keep track of (client_socket, aes_key, client_address)
 
